@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "lint": "eslint \"src\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "dotenv -c '.env' -- node app"
   },

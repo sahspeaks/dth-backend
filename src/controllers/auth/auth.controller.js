@@ -105,16 +105,18 @@ export const fetchCustomer = async (req, res) => {
 
 export const updateCustomer = async (req, res) => {
   try {
-    console.log(req.body);
     const { id } = req.params;
-    const { username, phone, address } = req.body;
+    const { username, phone, address, avatar } = req.body;
     const customer = await Customer.findById(id);
+
     if (!customer) {
       return res.status(404).json({ message: "Customer not found" });
     }
     customer.username = username;
     customer.phone = phone;
     customer.address = address;
+    customer.avatar = avatar;
+
     await customer.save();
     return res
       .status(200)

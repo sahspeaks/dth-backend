@@ -11,6 +11,11 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    specifications: [
+      {
+        type: String,
+      },
+    ],
     price: {
       type: Number,
       required: true,
@@ -36,11 +41,6 @@ const productSchema = new mongoose.Schema(
         type: String,
       },
     ],
-    // specifications: {
-    //   type: Map,
-    //   of: String,
-    //   default: {},
-    // },
     features: [
       {
         type: String,

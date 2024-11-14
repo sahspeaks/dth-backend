@@ -1,17 +1,16 @@
-import exp from "constants";
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema(
   {
     username: {
       type: String,
       required: true,
-      unique: true,
     },
     role: {
       type: String,
-      default: "user",
-      enum: ["user", "admin"],
+      default: "customer",
+      enum: ["customer", "admin"],
     },
     email: {
       type: String,
@@ -50,7 +49,7 @@ const customerSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    default: "user",
+    default: "customer",
     enum: ["customer"],
   },
   address: {
@@ -74,6 +73,18 @@ const adminSchema = new mongoose.Schema({
     default: "admin",
   },
 });
+
+//hashing password
+customerSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+customerSchema.methods.isPasswordCorrect = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
 // export const User = mongoose.model("User", userSchema);
 export const Customer = mongoose.model("Customer", customerSchema);

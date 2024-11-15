@@ -25,7 +25,7 @@ const start = async () => {
   const app = express();
   // CORS configuration
   const corsOptions = {
-    origin: "https://mydth.netlify.app/", // Your frontend URL
+    origin: "https://mystb.netlify.app", // Your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -42,7 +42,7 @@ const start = async () => {
     admin.watch();
   }
   const MongoDBStore = ConnectMongoDBSession(session);
-  console.log(process.env.DATABASE_URL);
+  // console.log(process.env.DATABASE_URL);
 
   const sessionStore = new MongoDBStore({
     uri: process.env.DATABASE_URL,

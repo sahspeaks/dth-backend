@@ -16,6 +16,7 @@ import cors from "cors";
 //import routes
 import userRoutes from "./src/routes/user.route.js";
 import productRoutes from "./src/routes/product.route.js";
+import orderRoutes from "./src/routes/order.route.js";
 
 dotenv.config();
 console.log("DATABASE_URL:", process.env.DATABASE_URL);
@@ -85,6 +86,7 @@ const start = async () => {
   });
   app.use("/api/v1", userRoutes);
   app.use("/api/v1", productRoutes);
+  app.use("/api/v1", orderRoutes);
 
   //start server
   app.listen(PORT, () => {

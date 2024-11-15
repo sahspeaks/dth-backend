@@ -31,8 +31,14 @@ const options = {
     {
       resource: Models.Order,
       options: {
-        listProperties: ["orderId", "customer", "status", "paymentId", "price"],
-        filterProperties: ["orderId", "status", "price"],
+        listProperties: [
+          "orderId",
+          // "customer",
+          "status",
+          "paymentId",
+          "totalAmount",
+        ],
+        filterProperties: ["orderId", "status", "totalAmount"],
       },
     },
     {

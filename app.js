@@ -25,7 +25,7 @@ const start = async () => {
   const app = express();
   // CORS configuration
   const corsOptions = {
-    origin: "http://localhost:3000", // Your frontend URL
+    origin: "https://mydth.netlify.app/", // Your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,

@@ -17,6 +17,7 @@ import cors from "cors";
 import userRoutes from "./src/routes/user.route.js";
 import productRoutes from "./src/routes/product.route.js";
 import orderRoutes from "./src/routes/order.route.js";
+import ServiceRoutes from "./src/routes/serviceOrder.route.js";
 
 dotenv.config();
 console.log("DATABASE_URL:", process.env.DATABASE_URL);
@@ -25,7 +26,7 @@ const start = async () => {
   const app = express();
   // CORS configuration
   const corsOptions = {
-    origin: "https://mystb.netlify.app", // Your frontend URL
+    origin: "https://mystb.netlify.app", // Your frontend URL "http://localhost:3000"
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -87,6 +88,7 @@ const start = async () => {
   app.use("/api/v1", userRoutes);
   app.use("/api/v1", productRoutes);
   app.use("/api/v1", orderRoutes);
+  app.use("/api/v1", ServiceRoutes);
 
   //start server
   app.listen(PORT, () => {

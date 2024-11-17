@@ -33,7 +33,7 @@ const options = {
       options: {
         listProperties: [
           "orderId",
-          // "customer",
+          // "customerName",
           "status",
           "paymentId",
           "totalAmount",
@@ -42,7 +42,11 @@ const options = {
       },
     },
     {
-      resource: Models.Counter,
+      resource: Models.ServiceOrder,
+      options: {
+        listProperties: ["service", "customerName", "status", "price"],
+        filterProperties: ["service", "status"],
+      },
     },
   ],
   databases: [],

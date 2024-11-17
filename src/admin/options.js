@@ -54,7 +54,7 @@ const options = {
     companyName: "MY STB",
     withMadeWithLove: false,
     favicon:
-      "https://e7.pngegg.com/pngimages/408/746/png-clipart-satellite-dish-illustration-computer-icons-satellite-dish-aerials-satellite-dish-icon-miscellaneous-text.png",
+      "https://res.cloudinary.com/dra8tbz4z/image/upload/v1731834997/deek5lvhlnrdmskmi5he.png",
   },
 };
 

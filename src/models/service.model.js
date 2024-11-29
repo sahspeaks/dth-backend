@@ -5,6 +5,12 @@ const serviceOrderSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
+  razorpayOrderId: {
+    type: String,
+  },
+  paymentId: {
+    type: String,
+  },
   service: {
     type: String,
     required: true,

@@ -26,7 +26,7 @@ const start = async () => {
   const app = express();
   // CORS configuration
   const corsOptions = {
-    origin: "https://mystb.netlify.app", // Your frontend URL "http://localhost:3000"
+    origin: "https://mystb.netlify.app", // Your frontend URL ""  http://localhost:3000
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,

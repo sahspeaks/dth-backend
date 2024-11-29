@@ -1,6 +1,11 @@
 import { ServiceOrder } from "../../models/service.model.js";
-
+import Razorpay from "razorpay";
+import nodemailer from "nodemailer";
 const createServiceOrder = async (req, res) => {
+  const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  });
   try {
     const {
       service,
@@ -74,9 +79,20 @@ const createServiceOrder = async (req, res) => {
       ...(address && { address }),
     });
 
+    // Create Razorpay order
+    const amountInPaise = price * 100;
+    const options = {
+      amount: amountInPaise,
+      currency: "INR",
+      receipt: `receipt_order_${serviceOrder.serviceId}`,
+    };
+
+    const razorpayOrder = await razorpay.orders.create(options);
+
     return res.status(201).json({
       success: true,
       data: serviceOrder,
+      razorpayOrderId: razorpayOrder.id,
       message: "Service order created successfully",
     });
   } catch (error) {
@@ -91,7 +107,7 @@ const createServiceOrder = async (req, res) => {
 const getServiceByCustomerId = async (req, res) => {
   try {
     const { customerId } = req.params;
-    console.log("Received customerId:", customerId);
+    // console.log("Received customerId:", customerId);
     const serviceOrders = await ServiceOrder.find({ customerId });
     return res.status(200).json({
       success: true,
@@ -108,4 +124,72 @@ const getServiceByCustomerId = async (req, res) => {
   }
 };
 
-export { createServiceOrder, getServiceByCustomerId };
+const postPayment = async (req, res) => {
+  try {
+    // Verify the Razorpay webhook signature
+    const { serviceId, paymentId, razorpayOrderId } = req.body;
+    // console.log("Received payment completion webhook:", req.body);
+
+    // Find the order in the database
+    const order = await ServiceOrder.findOneAndUpdate(
+      { serviceId }, // query
+      {
+        $set: {
+          paymentId: paymentId,
+          razorpayOrderId: razorpayOrderId,
+        },
+      }, // update
+      { new: true } // options
+    );
+
+    //send email to admin
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: {
+        name: "MY STB",
+        address: process.env.EMAIL_USER,
+      },
+      to: process.env.EMAIL_USER,
+      subject: `New Service Order ${order.serviceId}`,
+      text:
+        `A new service order has been placed.\n\n` +
+        `Service Type: ${order.service.toUpperCase()} \n\n` +
+        `Placed by ${order.customerName}\n\n` +
+        `Booked Slot on Date: ${order.date.toLocaleDateString("en-GB")} \n\n` +
+        `Slot Time:  ${order.time}`,
+    };
+
+    await transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return console.error("Error sending email:", error);
+      }
+      // console.log("Email sent:", info.response);
+    });
+
+    if (!order) {
+      return res.status(404).json({ error: "Service Order not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Payment completed successfully", data: order });
+  } catch (error) {
+    console.error("Error processing payment:", error);
+    res.status(500).json({
+      error: "Error processing payment",
+      details: error.message,
+    });
+  }
+};
+
+export { createServiceOrder, getServiceByCustomerId, postPayment };
